@@ -40,30 +40,7 @@ func runService(db *gorm.DB) error {
 	restaurants := r.Group("/restaurants")
 	{
 		restaurants.POST("", transport.HandleCreateOneRestaurant(appContext))
-
-		restaurants.GET("/:id", func(c *gin.Context) {
-			id, err := strconv.Atoi(c.Param("id"))
-
-			if err != nil {
-				c.JSON(http.StatusUnauthorized, gin.H{
-					"error": err.Error(),
-				})
-
-				return
-			}
-
-			var data Restaurant
-
-			if err := db.Where("id = ?", id).First(&data).Error; err != nil {
-				c.JSON(http.StatusUnauthorized, gin.H{
-					"error": err.Error(),
-				})
-
-				return
-			}
-
-			c.JSON(http.StatusOK, data)
-		})
+		restaurants.GET("/:id", transport.HandleFindOneRestaurant(appContext))
 
 		restaurants.GET("", func(c *gin.Context) {
 			var data []Restaurant
