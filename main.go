@@ -7,6 +7,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"simple-rest-api/components"
+	"simple-rest-api/modules/restaurant/transport"
 	"strconv"
 )
 
@@ -33,30 +35,11 @@ func runService(db *gorm.DB) error {
 	})
 
 	// CRUD
+	appContext := components.NewAppContext(db)
 
 	restaurants := r.Group("/restaurants")
 	{
-		restaurants.POST("", func(c *gin.Context) {
-			var data Restaurant
-
-			if err := c.ShouldBind(&data); err != nil {
-				c.JSON(http.StatusUnauthorized, map[string]interface{}{
-					"error": err.Error(),
-				})
-
-				return
-			}
-
-			if err := db.Create(&data).Error; err != nil {
-				c.JSON(http.StatusUnauthorized, map[string]interface{}{
-					"error": err.Error(),
-				})
-
-				return
-			}
-
-			c.JSON(http.StatusOK, data)
-		})
+		restaurants.POST("", transport.HandleCreateOneRestaurant(appContext))
 
 		restaurants.GET("/:id", func(c *gin.Context) {
 			id, err := strconv.Atoi(c.Param("id"))
