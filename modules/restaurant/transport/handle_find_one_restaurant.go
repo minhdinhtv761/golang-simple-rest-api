@@ -1,7 +1,6 @@
 package transport
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"simple-rest-api/components"
@@ -14,8 +13,6 @@ import (
 func HandleFindOneRestaurant(appContext components.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := strconv.Atoi(c.Param("id"))
-
-		fmt.Println(id)
 
 		if err != nil {
 			c.JSON(http.StatusNotFound, err)
