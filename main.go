@@ -9,7 +9,6 @@ import (
 	"os"
 	"simple-rest-api/components"
 	"simple-rest-api/modules/restaurant/transport"
-	"strconv"
 )
 
 func main() {
@@ -43,30 +42,7 @@ func runService(db *gorm.DB) error {
 		restaurants.GET("/:id", transport.HandleFindOneRestaurant(appContext))
 		restaurants.GET("", transport.HandleFindManyRestaurantsByConditions(appContext))
 		restaurants.PATCH("/:id", transport.HandleEditOneRestaurant(appContext))
-
-		restaurants.DELETE("/:id", func(c *gin.Context) {
-			id, err := strconv.Atoi(c.Param("id"))
-
-			if err != nil {
-				c.JSON(http.StatusUnauthorized, map[string]interface{}{
-					"error": err.Error(),
-				})
-
-				return
-			}
-
-			if err := db.Table(Restaurant{}.TableName()).
-				Where("id = ?", id).
-				Delete(nil).Error; err != nil {
-				c.JSON(http.StatusUnauthorized, map[string]interface{}{
-					"error": err.Error(),
-				})
-
-				return
-			}
-
-			c.JSON(http.StatusOK, gin.H{"ok": 1})
-		})
+		restaurants.DELETE("/:id", transport.HandleDeleteOneRestaurant(appContext))
 	}
 
 	return r.Run()
