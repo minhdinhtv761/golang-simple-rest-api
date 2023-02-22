@@ -42,38 +42,7 @@ func runService(db *gorm.DB) error {
 		restaurants.POST("", transport.HandleCreateOneRestaurant(appContext))
 		restaurants.GET("/:id", transport.HandleFindOneRestaurant(appContext))
 		restaurants.GET("", transport.HandleFindManyRestaurantsByConditions(appContext))
-
-		restaurants.PATCH("/:id", func(c *gin.Context) {
-			id, err := strconv.Atoi(c.Param("id"))
-
-			if err != nil {
-				c.JSON(http.StatusUnauthorized, map[string]interface{}{
-					"error": err.Error(),
-				})
-
-				return
-			}
-
-			var data Restaurant
-
-			if err := c.ShouldBind(&data); err != nil {
-				c.JSON(http.StatusUnauthorized, map[string]interface{}{
-					"error": err.Error(),
-				})
-
-				return
-			}
-
-			if err := db.Where("id = ?", id).Updates(&data).Error; err != nil {
-				c.JSON(http.StatusUnauthorized, map[string]interface{}{
-					"error": err.Error(),
-				})
-
-				return
-			}
-
-			c.JSON(http.StatusOK, data)
-		})
+		restaurants.PATCH("/:id", transport.HandleEditOneRestaurant(appContext))
 
 		restaurants.DELETE("/:id", func(c *gin.Context) {
 			id, err := strconv.Atoi(c.Param("id"))
