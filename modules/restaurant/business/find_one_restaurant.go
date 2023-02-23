@@ -6,7 +6,11 @@ import (
 )
 
 type SelectOneRestaurantStore interface {
-	SelectOneRestaurant(ctx context.Context, id *int, data *model.Restaurant) error
+	SelectOneRestaurantByConditions(
+		ctx context.Context,
+		conditions map[string]interface{},
+		moreKeys ...string,
+	) (*model.Restaurant, error)
 }
 
 type findOneRestaurantBiz struct {
@@ -17,8 +21,11 @@ func NewFindOneRestaurantBiz(store SelectOneRestaurantStore) *findOneRestaurantB
 	return &findOneRestaurantBiz{store}
 }
 
-func (biz *findOneRestaurantBiz) FindOneRestaurant(ctx context.Context, id *int, data *model.Restaurant) error {
-	err := biz.store.SelectOneRestaurant(ctx, id, data)
+func (biz *findOneRestaurantBiz) FindOneRestaurant(
+	ctx context.Context,
+	id *int,
+) (*model.Restaurant, error) {
+	data, err := biz.store.SelectOneRestaurantByConditions(ctx, map[string]interface{}{"id": *id})
 
-	return err
+	return data, err
 }
