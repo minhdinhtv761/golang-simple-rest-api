@@ -3,7 +3,7 @@ package business
 import "context"
 
 type MarkDeletedOneRestaurantStore interface {
-	MarkDeletedOneRestaurant(ctx context.Context, id *int) error
+	SoftDeleteOneRestaurant(ctx context.Context, id *int) error
 }
 
 type deleteOneRestaurantBiz struct {
@@ -16,7 +16,7 @@ func NewDeleteOneRestaurantBiz(store MarkDeletedOneRestaurantStore) *deleteOneRe
 }
 
 func (biz *deleteOneRestaurantBiz) DeleteOneRestaurant(ctx context.Context, id *int) error {
-	err := biz.store.MarkDeletedOneRestaurant(ctx, id)
+	err := biz.store.SoftDeleteOneRestaurant(ctx, id)
 
 	return err
 }
