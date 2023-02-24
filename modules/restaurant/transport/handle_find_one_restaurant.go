@@ -3,6 +3,7 @@ package transport
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"simple-rest-api/common"
 	"simple-rest-api/components"
 	"simple-rest-api/modules/restaurant/business"
 	"simple-rest-api/modules/restaurant/storage"
@@ -32,6 +33,6 @@ func HandleFindOneRestaurant(appContext components.AppContext) gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, data)
+		c.JSON(http.StatusOK, common.NewSimpleSuccessResponse(data))
 	}
 }

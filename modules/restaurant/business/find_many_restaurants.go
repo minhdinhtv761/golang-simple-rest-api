@@ -10,8 +10,9 @@ type SelectManyRestaurantsByConditionsStore interface {
 	SelectManyRestaurantsByConditions(
 		ctx context.Context,
 		conditions map[string]interface{},
-		filter *model.Filter,
 		paging *common.Paging,
+		filter *model.RestaurantFilter,
+		sort string,
 		moreKeys ...string,
 	) ([]model.Restaurant, error)
 }
@@ -28,10 +29,11 @@ func NewFindManyRestaurantsByConditionsBiz(
 
 func (biz *findManyRestaurantsByConditionsBiz) FindManyRestaurantsByConditions(
 	ctx context.Context,
-	filter *model.Filter,
 	paging *common.Paging,
+	filter *model.RestaurantFilter,
+	sort string,
 ) ([]model.Restaurant, error) {
-	result, err := biz.store.SelectManyRestaurantsByConditions(ctx, nil, filter, paging)
+	result, err := biz.store.SelectManyRestaurantsByConditions(ctx, nil, paging, filter, sort)
 
 	return result, err
 }

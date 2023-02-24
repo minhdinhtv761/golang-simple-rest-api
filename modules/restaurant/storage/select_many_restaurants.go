@@ -9,8 +9,9 @@ import (
 func (s *mySQLStore) SelectManyRestaurantsByConditions(
 	ctx context.Context,
 	conditions map[string]interface{},
-	filter *model.Filter,
 	paging *common.Paging,
+	filter *model.RestaurantFilter,
+	sort string,
 	moreKeys ...string,
 ) ([]model.Restaurant, error) {
 	var result []model.Restaurant
@@ -36,6 +37,7 @@ func (s *mySQLStore) SelectManyRestaurantsByConditions(
 	if err := db.
 		Offset((paging.Page - 1) * paging.Limit).
 		Limit(paging.Limit).
+		Order(sort).
 		Find(&result).Error; err != nil {
 		return nil, err
 	}
