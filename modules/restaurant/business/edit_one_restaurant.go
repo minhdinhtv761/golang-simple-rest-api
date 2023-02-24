@@ -7,6 +7,11 @@ import (
 )
 
 type UpdateOneRestaurantStore interface {
+	SelectOneRestaurantByConditions(
+		ctx context.Context,
+		conditions map[string]interface{},
+		moreKeys ...string,
+	) (*model.Restaurant, error)
 	UpdateOneRestaurant(ctx context.Context, id *int, data *model.RestaurantToUpdate) error
 }
 
@@ -19,11 +24,22 @@ func NewEditOneRestaurantBiz(store UpdateOneRestaurantStore) *editOneRestaurantB
 }
 
 func (biz editOneRestaurantBiz) EditOneRestaurant(ctx context.Context, id *int, data *model.RestaurantToUpdate) error {
-	if name := data.Name; *name == "" {
-		return errors.New("restaurant's name can't be blank")
+	oldData, err := biz.store.SelectOneRestaurantByConditions(
+		ctx,
+		map[string]interface{}{"id": id},
+	)
+
+	if err != nil {
+		return err
 	}
 
-	err := biz.store.UpdateOneRestaurant(ctx, id, data)
+	if oldData.Status == "inactive" {
+		return errors.New("restaurant has already been deleted")
+	}
 
-	return err
+	if err := biz.store.UpdateOneRestaurant(ctx, id, data); err != nil {
+		return err
+	}
+
+	return nil
 }

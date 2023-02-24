@@ -2,7 +2,6 @@ package business
 
 import (
 	"context"
-	"errors"
 	"simple-rest-api/modules/restaurant/model"
 )
 
@@ -19,8 +18,8 @@ func NewCreateOneRestaurantBiz(store InsertOneRestaurantStore) *createOneRestaur
 }
 
 func (biz *createOneRestaurantBiz) CreateOneRestaurant(ctx context.Context, data *model.RestaurantToCreate) error {
-	if data.Name == "" {
-		return errors.New("restaurant's name can't be blank")
+	if err := data.Validate(); err != nil {
+		return err
 	}
 
 	err := biz.store.InsertOneRestaurant(ctx, data)
