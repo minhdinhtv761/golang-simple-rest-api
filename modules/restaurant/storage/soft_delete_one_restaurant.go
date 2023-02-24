@@ -10,8 +10,8 @@ func (s *mySQLStore) SoftDeleteOneRestaurant(ctx context.Context, id *int) error
 
 	if err := db.
 		Table(model.Restaurant{}.TableName()).
-		Where("id = ? AND status = ?", &id, "active").
-		Update("status", "deleted").Error; err != nil {
+		Where("id = ?", &id).
+		Update("status", "inactive").Error; err != nil {
 		return err
 	}
 
