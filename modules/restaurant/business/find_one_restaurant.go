@@ -2,6 +2,7 @@ package business
 
 import (
 	"context"
+	"errors"
 	"simple-rest-api/modules/restaurant/model"
 )
 
@@ -26,6 +27,14 @@ func (biz *findOneRestaurantBiz) FindOneRestaurant(
 	id *int,
 ) (*model.Restaurant, error) {
 	data, err := biz.store.SelectOneRestaurantByConditions(ctx, map[string]interface{}{"id": *id})
+
+	if err != nil {
+		return nil, err
+	}
+
+	if data.Status == "inactive" {
+		return nil, errors.New("restaurant has already been deleted")
+	}
 
 	return data, err
 }
