@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"simple-rest-api/common"
 	"simple-rest-api/modules/restaurant/model"
 )
 
@@ -12,7 +13,7 @@ func (s *mySQLStore) SoftDeleteOneRestaurant(ctx context.Context, id *int) error
 		Table(model.Restaurant{}.TableName()).
 		Where("id = ?", &id).
 		Update("status", "inactive").Error; err != nil {
-		return err
+		return common.ErrDB(err)
 	}
 
 	return nil

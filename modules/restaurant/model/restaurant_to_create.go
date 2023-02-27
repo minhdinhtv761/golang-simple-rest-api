@@ -6,6 +6,7 @@ import (
 )
 
 type RestaurantToCreate struct {
+	ID     int              `json:"id" gorm:"column:id"`
 	Name   string           `json:"name" gorm:"column:name;"`
 	Addr   string           `json:"addr" gorm:"column:addr;"`
 	Status RestaurantStatus `json:"status,omitempty" gorm:"column:status;type:RestaurantStatus;default:'active'"`

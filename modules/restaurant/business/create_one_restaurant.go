@@ -2,6 +2,7 @@ package business
 
 import (
 	"context"
+	"simple-rest-api/common"
 	"simple-rest-api/modules/restaurant/model"
 )
 
@@ -19,10 +20,10 @@ func NewCreateOneRestaurantBiz(store InsertOneRestaurantStore) *createOneRestaur
 
 func (biz *createOneRestaurantBiz) CreateOneRestaurant(ctx context.Context, data *model.RestaurantToCreate) error {
 	if err := data.Validate(); err != nil {
-		return err
+		return common.ErrBadRequest(err, err.Error())
 	}
 
 	err := biz.store.InsertOneRestaurant(ctx, data)
 
-	return err
+	return common.ErrCannotCreateEntityResource(model.EntityName, err)
 }

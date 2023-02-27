@@ -31,7 +31,7 @@ func (s *mySQLStore) SelectManyRestaurantsByConditions(
 	}
 
 	if err := db.Count(&paging.Total).Error; err != nil {
-		return nil, err
+		return nil, common.ErrDB(err)
 	}
 
 	if err := db.
@@ -39,7 +39,7 @@ func (s *mySQLStore) SelectManyRestaurantsByConditions(
 		Limit(paging.Limit).
 		Order(sort).
 		Find(&result).Error; err != nil {
-		return nil, err
+		return nil, common.ErrDB(err)
 	}
 
 	return result, nil

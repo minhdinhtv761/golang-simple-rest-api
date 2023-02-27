@@ -2,7 +2,7 @@ package business
 
 import (
 	"context"
-	"errors"
+	"simple-rest-api/common"
 	"simple-rest-api/modules/restaurant/model"
 )
 
@@ -30,15 +30,19 @@ func (biz editOneRestaurantBiz) EditOneRestaurant(ctx context.Context, id *int, 
 	)
 
 	if err != nil {
-		return err
+		if err == common.ErrRecordNotFound {
+			return common.ErrCannotUpdateEntityResource(model.EntityName, err)
+		}
+
+		return common.ErrCannotUpdateEntityResource(model.EntityName, err)
 	}
 
-	if oldData.Status == "inactive" {
-		return errors.New("restaurant has already been deleted")
+	if oldData.Status == model.Inactive {
+		return common.ErrCannotUpdateEntityResource(model.EntityName, err)
 	}
 
 	if err := biz.store.UpdateOneRestaurant(ctx, id, data); err != nil {
-		return err
+		return common.ErrCannotUpdateEntityResource(model.EntityName, err)
 	}
 
 	return nil

@@ -2,7 +2,7 @@ package business
 
 import (
 	"context"
-	"errors"
+	"simple-rest-api/common"
 	"simple-rest-api/modules/restaurant/model"
 )
 
@@ -33,15 +33,19 @@ func (biz *deleteOneRestaurantBiz) DeleteOneRestaurant(ctx context.Context, id *
 	)
 
 	if err != nil {
-		return err
+		if err == common.ErrRecordNotFound {
+			return common.ErrCannotDeleteEntityResource(model.EntityName, err)
+		}
+
+		return common.ErrCannotDeleteEntityResource(model.EntityName, err)
 	}
 
-	if oldData.Status == "inactive" {
-		return errors.New("restaurant has already been deleted")
+	if oldData.Status == model.Inactive {
+		return common.ErrCannotDeleteEntityResource(model.EntityName, err)
 	}
 
 	if err := biz.store.SoftDeleteOneRestaurant(ctx, id); err != nil {
-		return err
+		return common.ErrCannotDeleteEntityResource(model.EntityName, err)
 	}
 
 	return nil

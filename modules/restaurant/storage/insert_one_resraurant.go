@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"simple-rest-api/common"
 	"simple-rest-api/modules/restaurant/model"
 )
 
@@ -9,7 +10,7 @@ func (s *mySQLStore) InsertOneRestaurant(ctx context.Context, data *model.Restau
 	db := s.db
 
 	if err := db.Create(data).Error; err != nil {
-		return err
+		return common.ErrDB(err)
 	}
 
 	return nil

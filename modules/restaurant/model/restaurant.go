@@ -1,6 +1,11 @@
 package model
 
-import "simple-rest-api/common"
+import (
+	"fmt"
+	"simple-rest-api/common"
+)
+
+const EntityName = "Restaurant"
 
 type Restaurant struct {
 	common.SQLModel `json:",inline"`
@@ -10,5 +15,5 @@ type Restaurant struct {
 }
 
 func (Restaurant) TableName() string {
-	return "restaurants"
+	return fmt.Sprintf("%ss", EntityName)
 }
