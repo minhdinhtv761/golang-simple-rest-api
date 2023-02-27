@@ -15,22 +15,14 @@ func HandleDeleteOneRestaurant(appContext components.AppContext) gin.HandlerFunc
 		id, err := strconv.Atoi(c.Param("id"))
 
 		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{
-				"error": err.Error(),
-			})
-
-			return
+			panic(common.ErrBadRequest(err, ""))
 		}
 
 		store := storage.NewMySQLStore(appContext.GetMainDBConnection())
 		biz := business.NewDeleteOneRestaurantBiz(store)
 
 		if err := biz.DeleteOneRestaurant(c.Request.Context(), &id); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
-
-			return
+			panic(err)
 		}
 
 		c.JSON(http.StatusOK, common.NewDoneSuccessResponse())

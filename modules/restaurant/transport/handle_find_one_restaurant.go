@@ -15,9 +15,7 @@ func HandleFindOneRestaurant(appContext components.AppContext) gin.HandlerFunc {
 		id, err := strconv.Atoi(c.Param("id"))
 
 		if err != nil {
-			c.JSON(http.StatusNotFound, err)
-
-			return
+			panic(common.ErrBadRequest(err, ""))
 		}
 
 		store := storage.NewMySQLStore(appContext.GetMainDBConnection())
@@ -26,11 +24,7 @@ func HandleFindOneRestaurant(appContext components.AppContext) gin.HandlerFunc {
 		data, err := biz.FindOneRestaurant(c.Request.Context(), &id)
 
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
-
-			return
+			panic(err)
 		}
 
 		c.JSON(http.StatusOK, common.NewSimpleSuccessResponse(data))

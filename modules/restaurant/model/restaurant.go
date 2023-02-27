@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 	"simple-rest-api/common"
+	"strings"
 )
 
 const EntityName = "Restaurant"
@@ -15,5 +16,5 @@ type Restaurant struct {
 }
 
 func (Restaurant) TableName() string {
-	return fmt.Sprintf("%ss", EntityName)
+	return fmt.Sprintf("%ss", strings.ToLower(EntityName))
 }

@@ -15,22 +15,14 @@ func HandleCreateOneRestaurant(appContext components.AppContext) gin.HandlerFunc
 		var data model.RestaurantToCreate
 
 		if err := c.ShouldBind(&data); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
-
-			return
+			panic(common.ErrBadRequest(err, ""))
 		}
 
 		store := storage.NewMySQLStore(appContext.GetMainDBConnection())
 		biz := business.NewCreateOneRestaurantBiz(store)
 
 		if err := biz.CreateOneRestaurant(c.Request.Context(), &data); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
-
-			return
+			panic(err)
 		}
 
 		c.JSON(http.StatusCreated, common.NewSimpleSuccessResponse(data))

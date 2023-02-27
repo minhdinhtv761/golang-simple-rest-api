@@ -16,32 +16,20 @@ func HandleEditOneRestaurant(appContext components.AppContext) gin.HandlerFunc {
 		id, err := strconv.Atoi(c.Param("id"))
 
 		if err != nil {
-			c.JSON(http.StatusNotFound, gin.H{
-				"error": err.Error(),
-			})
-
-			return
+			panic(common.ErrBadRequest(err, ""))
 		}
 
 		var data model.RestaurantToUpdate
 
 		if err := c.ShouldBind(&data); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
-
-			return
+			panic(common.ErrBadRequest(err, ""))
 		}
 
 		store := storage.NewMySQLStore(appContext.GetMainDBConnection())
 		biz := business.NewEditOneRestaurantBiz(store)
 
 		if err := biz.EditOneRestaurant(c.Request.Context(), &id, &data); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
-
-			return
+			panic(err)
 		}
 
 		c.JSON(http.StatusOK, common.NewDoneSuccessResponse())

@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"simple-rest-api/components"
+	"simple-rest-api/middleware"
 	"simple-rest-api/modules/restaurant/transport"
 )
 
@@ -25,7 +26,11 @@ func main() {
 }
 
 func runService(db *gorm.DB) error {
+	appContext := components.NewAppContext(db)
+
 	r := gin.Default()
+
+	r.Use(middleware.Recover(appContext))
 
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
@@ -34,8 +39,6 @@ func runService(db *gorm.DB) error {
 	})
 
 	// CRUD
-	appContext := components.NewAppContext(db)
-
 	restaurants := r.Group("/restaurants")
 	{
 		restaurants.POST("", transport.HandleCreateOneRestaurant(appContext))

@@ -32,19 +32,13 @@ func HandleFindManyRestaurantsByConditions(appContext components.AppContext) gin
 		var filter model.RestaurantFilter
 
 		if err := c.ShouldBind(&filter); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
-
-			return
+			panic(common.ErrBadRequest(err, ""))
 		}
 
 		var sort common.Sort
 
 		if err := c.ShouldBind(&sort); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
+			panic(common.ErrBadRequest(err, ""))
 		}
 
 		var paging common.Paging
@@ -52,11 +46,7 @@ func HandleFindManyRestaurantsByConditions(appContext components.AppContext) gin
 		paging.Fulfill()
 
 		if err := c.ShouldBind(&paging); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
-
-			return
+			panic(common.ErrBadRequest(err, ""))
 		}
 
 		store := storage.NewMySQLStore(appContext.GetMainDBConnection())
@@ -70,11 +60,7 @@ func HandleFindManyRestaurantsByConditions(appContext components.AppContext) gin
 		)
 
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
-
-			return
+			panic(err)
 		}
 
 		c.JSON(http.StatusOK, common.NewSuccessResponse(

@@ -89,7 +89,7 @@ func ErrCannotCreateEntityResource(entity string, err error) *AppError {
 	return NewErrorResponse(
 		http.StatusNotFound,
 		err,
-		fmt.Sprintf("cannot create %s resource", entity),
+		fmt.Sprintf("cannot create %s resource", strings.ToLower(entity)),
 		fmt.Sprintf("ErrCannotCreate%sResource", entity),
 	)
 }
@@ -98,7 +98,7 @@ func ErrCannotGetEntityResource(entity string, err error) *AppError {
 	return NewErrorResponse(
 		http.StatusNotFound,
 		err,
-		fmt.Sprintf("cannot get %s resource", entity),
+		fmt.Sprintf("cannot get %s resource", strings.ToLower(entity)),
 		fmt.Sprintf("ErrCannotGet%sResource", entity),
 	)
 }
@@ -107,7 +107,7 @@ func ErrCannotUpdateEntityResource(entity string, err error) *AppError {
 	return NewErrorResponse(
 		http.StatusNotFound,
 		err,
-		fmt.Sprintf("cannot get %s resource", entity),
+		fmt.Sprintf("cannot get %s resource", strings.ToLower(entity)),
 		fmt.Sprintf("ErrCannotUpdate%sResource", entity),
 	)
 }
@@ -116,7 +116,7 @@ func ErrCannotDeleteEntityResource(entity string, err error) *AppError {
 	return NewErrorResponse(
 		http.StatusNotFound,
 		err,
-		fmt.Sprintf("cannot delete %s resource", entity),
+		fmt.Sprintf("cannot delete %s resource", strings.ToLower(entity)),
 		fmt.Sprintf("ErrCannotDelete%sResource", entity),
 	)
 }
